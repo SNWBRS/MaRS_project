@@ -1,14 +1,16 @@
 from CGRtools.CGRreactor import CGRreactor
 from CGRtools.files.SDFrw import SDFread
-from networkx.algorithms import isomorphism
-#a=list(SDFread(open('hasan.sdf')).read())
 
-def Feruza_isomorph(a): # a - SDF file
-    cgrr = CGRreactor()
-    for x in a:
-        iso = cgrr.spgraphmatcher(x, a[9])
-        if iso.is_isomorphic():
-            return ('isomorph')
-        else:
-            if iso.subgraph_is_isomorphic():
-                return ('subgriso')
+db = SDFread(open('hasan.sdf')).read()
+cgrr = CGRreactor()
+
+def searcher(query, data):
+    res = []
+    for m in data:
+        gm = cgrr.get_cgr_matcher(query, m)
+        if gm.subgraph_is_isomorphic():
+            res.append(m)
+
+    return res
+
+print(searcher(db[0], db))
